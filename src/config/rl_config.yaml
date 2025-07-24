@@ -1,0 +1,4 @@
+ppo:
+  total_timesteps: 10000
+  policy: MlpPolicy
+  verbose: 1

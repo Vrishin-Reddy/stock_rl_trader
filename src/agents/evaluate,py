@@ -1,0 +1,22 @@
+import pandas as pd
+from stable_baselines3 import PPO
+from src.rl_env.trading_env import TradingEnv
+
+def evaluate_agent(ticker='AAPL', model_path=None):
+    df = pd.read_csv(f"data/{ticker}.csv")
+    future_pred = 0  # Could load or calculate forecast here
+
+    env = TradingEnv(df, future_pred)
+    model = PPO.load(model_path or f"models/ppo_{ticker}")
+
+    obs = env.reset()
+    done = False
+    total_reward = 0
+    while not done:
+        action, _ = model.predict(obs)
+        obs, reward, done, _ = env.step(action)
+        total_reward += reward
+    print(f"Total reward: {total_reward}")
+
+if __name__ == "__main__":
+    evaluate_agent()
